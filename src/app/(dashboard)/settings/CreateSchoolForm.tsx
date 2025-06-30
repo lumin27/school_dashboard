@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const CreateSchoolForm = () => {
   const [loading, setLoading] = useState(false);
-  const [creat, setCreat] = useState(false);
+  const [create, setCreate] = useState(false);
 
   const router = useRouter();
   const [name, setName] = useState<string>("");
@@ -25,6 +25,7 @@ const CreateSchoolForm = () => {
       const res = await createSchool(formData);
       if (res && res.success) {
         toast.success("School created successfully");
+        setCreate(false);
         router.refresh();
       } else {
         toast.error("Failed to create school");
@@ -34,6 +35,9 @@ const CreateSchoolForm = () => {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
+      setName("");
+      setMinTime("08:00");
+      setMaxTime("22:00");
     }
   };
 
@@ -41,7 +45,32 @@ const CreateSchoolForm = () => {
     <form
       onSubmit={handleSubmit}
       className='relative px-4 pb-8 flex gap-4 flex-col ring-[1.5px] ring-gray-200 bg-white items-center rounded-lg m-4 md:m-20 lg:mx-40'>
-      <h1 className='text-lg font-bold mt-4 mr-auto'>Create School Profile</h1>
+      <div className='flex items-center w-full relative'>
+        <h1 className='text-lg font-bold mt-4 mr-auto'>
+          Update School Settings
+        </h1>
+        <div
+          className='w-8 h-8 bg-lmSky rounded-full top-3 right-1 absolute flex items-center justify-center cursor-pointer hover:bg-lmSky transition-all duration-300'
+          onClick={() => setCreate(!create)}>
+          {create ? (
+            <Image
+              src='/close.png'
+              alt='create'
+              width={30}
+              height={30}
+              className='absolute w-4 h-4'
+            />
+          ) : (
+            <Image
+              src='/create.png'
+              alt='create'
+              width={30}
+              height={30}
+              className='absolute w-4 h-4'
+            />
+          )}
+        </div>
+      </div>{" "}
       <Image
         src={"/logo.png"}
         alt='school logo'
@@ -89,17 +118,17 @@ const CreateSchoolForm = () => {
         </div>
       ) : (
         <div className='flex justify-end w-full transition-all duration-300'>
-          {creat && (
+          {create && (
             <div
               className={`overflow-hidden w-full transition-all duration-300 ${
-                creat
+                create
                   ? "max-h-20 opacity-100 translate-y-0"
                   : "max-h-0 opacity-0 translate-y-2"
               }`}>
               <button
                 type='submit'
                 className='py-2 px-4 rounded-md bg-purple-400 text-white w-full transition-all duration-600'>
-                Creat
+                Create
               </button>
             </div>
           )}
