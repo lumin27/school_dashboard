@@ -1,25 +1,29 @@
 # Use Node.js as the base image
 FROM node:18
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json files
+# Copy dependency files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+# Copy Prisma schema first
+COPY prisma ./prisma
 
+# Generate Prisma client (with binary targets from updated schema)
 RUN npx prisma generate
 
-# Build the Next.js application
+# Now copy the rest of the application
+COPY . .
+
+# Build the Next.js app
 RUN npm run build
 
-# Expose the port the app runs on
+# Expose the app port
 EXPOSE 3000
 
-# Start the Next.js application
+# Start the app
 CMD ["npm", "start"]
