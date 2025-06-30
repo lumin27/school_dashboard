@@ -189,7 +189,8 @@ model Announcement {
   description String
   date        DateTime
 
-  classes   Class[]
+  classId     Int?
+  class   Class? @relation(fields: [classId], references: [id])
 }
 
 model Transaction {
