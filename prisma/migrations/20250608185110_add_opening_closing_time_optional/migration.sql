@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "School" ALTER COLUMN "logo" DROP NOT NULL,
+ALTER COLUMN "closingTime" DROP NOT NULL,
+ALTER COLUMN "openingTime" DROP NOT NULL;

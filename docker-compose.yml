@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 250120
+      POSTGRES_DB: school_dashboard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    container_name: nextjs_app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:250120@postgres_db:5432/school_dashboard
+    depends_on:
+      - postgres
