@@ -6,7 +6,7 @@ services:
     container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 342
+      POSTGRES_PASSWORD: 250120
       POSTGRES_DB: school_dashboard
     ports:
       - "5432:5432"
@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://postgres:342@postgres_db:5432/school_dashboard
+      DATABASE_URL: postgres://postgres:250120@postgres_db:5432/school_dashboard
     depends_on:
       - postgres
     restart: unless-stopped
