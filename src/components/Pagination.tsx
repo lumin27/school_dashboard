@@ -36,7 +36,7 @@ const Pagination = ({ page, total }: { page: number; total: number }) => {
       </div>
       <button
         onClick={() => handlePageChange(page + 1)}
-        disabled={page === Math.ceil(total / ITEM_PER_PAGE)}
+        disabled={page >= Math.ceil(total / ITEM_PER_PAGE) || total === 0}
         className='py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold
          disabled:opacity-50 disabled:cursor-not-allowed'>
         Next

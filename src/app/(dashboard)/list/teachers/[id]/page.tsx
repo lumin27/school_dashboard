@@ -8,7 +8,6 @@ import { auth } from "@clerk/nextjs/server";
 import { Teacher } from "@/generated/prisma";
 import Image from "next/image";
 import Link from "next/link";
-import { sub } from "date-fns";
 
 const SingleTeacherPage = async ({
   params,
