@@ -37,3 +37,6 @@ next-env.d.ts
 
 prisma/node_modules/
 
+node_modules/
+.prisma/
+prisma/node_modules/
