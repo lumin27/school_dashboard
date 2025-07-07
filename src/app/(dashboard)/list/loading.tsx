@@ -1,14 +1,28 @@
-import React from "react";
-
-const loading = () => {
+const Loading = () => {
   return (
-    <div className='min-h-screen w-full flex items-center justify-center bg-white'>
-      <div className='flex justify-center gap-2 items-center'>
-        <div className='w-6 h-6 border-4 border-purple-400 border-t-transparent rounded-full animate-spin' />
-        <span className='text-gray-700 text-sm'>Loading...</span>
+    <div className='p-8 animate-pulse'>
+      <div className=' rounded-lg overflow-hidden shadow-md'>
+        <div className='p-8 bg-gray-200 flex space-x-32'>
+          <div className='h-6 bg-gray-300 rounded w-1/6'></div>
+          <div className='h-6 bg-gray-300 rounded w-2/6'></div>
+          <div className='h-6 bg-gray-300 rounded w-1/6'></div>
+          <div className='h-6 bg-gray-300 rounded w-1/6'></div>
+        </div>
+        <div className='p-4'>
+          {[...Array(10)].map((_, index) => (
+            <div
+              key={index}
+              className='flex items-center justify-between mb-4 py-2 mt-4'>
+              <div className='h-8 bg-gray-200 rounded w-1/6 mr-2'></div>
+              <div className='h-8 bg-gray-200 rounded w-2/6 mr-2'></div>
+              <div className='h-8 bg-gray-200 rounded w-1/6 mr-2'></div>
+              <div className='h-8 bg-gray-200 rounded w-1/6'></div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default loading;
+export default Loading;
