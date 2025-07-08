@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 const CreateSchoolForm = () => {
   const [loading, setLoading] = useState(false);
   const [create, setCreate] = useState(false);
+  const [img, setImg] = useState<string>("");
 
   const router = useRouter();
   const [name, setName] = useState<string>("");
@@ -41,16 +42,17 @@ const CreateSchoolForm = () => {
     }
   };
 
+  const imageSrc =
+    img && typeof img === "string" && img.trim() !== "" ? img : "/logo.png";
+
   return (
     <form
       onSubmit={handleSubmit}
       className='relative px-4 pb-8 flex gap-4 flex-col ring-[1.5px] ring-gray-200 bg-white items-center rounded-lg m-4 md:m-20 lg:mx-40'>
       <div className='flex items-center w-full relative'>
-        <h1 className='text-lg font-bold mt-4 mr-auto'>
-          Update School Settings
-        </h1>
+        <h1 className='text-lg font-bold mt-4 mr-auto'>Create New School</h1>
         <div
-          className='w-8 h-8 bg-lmSky rounded-full top-3 right-1 absolute flex items-center justify-center cursor-pointer hover:bg-lmSky transition-all duration-300'
+          className='w-8 h-8 bg-gray-200 rounded-full top-3 right-1 absolute flex items-center justify-center cursor-pointer hover:bg-lmSky transition-all duration-300'
           onClick={() => setCreate(!create)}>
           {create ? (
             <Image
@@ -70,15 +72,29 @@ const CreateSchoolForm = () => {
             />
           )}
         </div>
-      </div>{" "}
-      <Image
-        src={"/logo.png"}
-        alt='school logo'
-        width={100}
-        height={100}
-        className='w-20 h-20 object-contain rounded-full'
-      />
-      <input type='file' name='logo' />
+      </div>
+      <div className='flex flex-col items-center justify-center'>
+        <Image
+          src={imageSrc}
+          alt='school logo'
+          width={100}
+          height={100}
+          className='w-30 h-30 object-contain rounded-full'
+        />
+        {create && (
+          <input
+            type='file'
+            name='logo'
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImg(URL.createObjectURL(file));
+              }
+            }}
+            className='mt-2 p-2 border-[1.5px] border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-gray-400 w-full'
+          />
+        )}
+      </div>
       <div className='flex mr-auto flex-col gap-2 w-full'>
         <span className='text-sm text-gray-400'>School Name</span>
         <input

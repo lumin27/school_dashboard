@@ -57,7 +57,7 @@ const UpdateSchoolForm = ({
           Update School Settings
         </h1>
         <div
-          className='w-8 h-8 bg-lmSky rounded-full top-3 right-1 absolute flex items-center justify-center cursor-pointer hover:bg-lmSky transition-all duration-300'
+          className='w-8 h-8 bg-gray-200 rounded-full top-3 right-1 absolute flex items-center justify-center cursor-pointer hover:bg-lmSky transition-all duration-300'
           onClick={() => setUpdate(!update)}>
           {update ? (
             <Image
