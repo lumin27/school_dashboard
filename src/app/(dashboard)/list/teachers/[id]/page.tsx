@@ -5,7 +5,7 @@ import Performance from "@/components/Performance";
 import { getAttendanceForTeacher } from "@/lib/actions";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { Teacher } from "@/generated/prisma";
+import { Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 

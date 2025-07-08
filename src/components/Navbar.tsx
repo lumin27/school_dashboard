@@ -3,7 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import React from "react";
 import ProfileImage from "./ProfileImage";
-import { Prisma } from "@/generated/prisma";
+import { Prisma } from "@prisma/client";
 
 const Navbar = async () => {
   const user = await currentUser();

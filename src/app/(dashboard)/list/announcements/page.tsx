@@ -4,7 +4,7 @@ import Pagination from "@/components/Pagination";
 import SortButton from "@/components/SortButton";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { Announcement, Class, Prisma } from "@/generated/prisma";
+import { Announcement, Class, Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";

@@ -7,13 +7,8 @@ import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
-import {
-  Assignment,
-  Class,
-  Prisma,
-  Subject,
-  Teacher,
-} from "@/generated/prisma";
+import { Assignment } from "@prisma/client";
+import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import React from "react";
 
 type AssignmentList = Assignment & {

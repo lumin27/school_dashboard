@@ -23,7 +23,7 @@ import {
 import { clerkClient } from "@clerk/express";
 import { revalidatePath } from "next/cache";
 import cloudinary from "./cloundinary";
-import { Parent, Prisma } from "@/generated/prisma";
+import { Parent, Prisma } from "@prisma/client";
 import prisma from "./prisma";
 
 type CurrentState = {

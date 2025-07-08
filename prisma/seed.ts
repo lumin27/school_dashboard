@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Day, UserSex } from "../src/generated/prisma";
+import { Day, UserSex } from "@prisma/client";
 
 const prisma = new PrismaClient();
 

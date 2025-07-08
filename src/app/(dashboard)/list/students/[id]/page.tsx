@@ -6,7 +6,7 @@ import StudentAttendanceCard from "@/components/StudentAttendanceCard";
 import { getAttendanceForStudent } from "@/lib/actions";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { Class, Student } from "@/generated/prisma";
+import { Class, Student } from "@prisma/client";
 import { get } from "http";
 import Image from "next/image";
 import Link from "next/link";

@@ -5,7 +5,7 @@ import { startOfMonth, endOfMonth, format } from "date-fns";
 import FilterButton from "@/components/FilterButton";
 import TableSearch from "@/components/TableSearch";
 import SortButton from "@/components/SortButton";
-import { Prisma } from "@/generated/prisma";
+import { Prisma } from "@prisma/client";
 
 type ClassSummary = {
   [className: string]: {
