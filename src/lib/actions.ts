@@ -285,7 +285,7 @@ export const createTeacher = async (
 
     return { success: true, error: false };
   } catch (err: any) {
-    console.log("Clerk error:", err.errors); // This shows the exact validation error
+    console.log("Clerk error:", err.errors);
     return { success: false, error: true };
   }
 };
@@ -1153,13 +1153,11 @@ export async function saveAttendance(data: AttendanceFormSchema) {
   try {
     const attendanceDate = new Date(validatedData.date);
 
-    // Optional: Narrow the delete range to just this exact minute
     const start = new Date(attendanceDate);
-    const end = new Date(start.getTime() + 60 * 1000); // +1 minute
+    const end = new Date(start.getTime() + 60 * 1000);
 
     const result = await prisma.$transaction(
       async (tx: Prisma.TransactionClient) => {
-        // Delete previous records for same lesson and same datetime minute
         await tx.attendance.deleteMany({
           where: {
             lessonId: validatedData.lessonId,
@@ -1253,7 +1251,7 @@ export async function getAttendanceForLessonAndDate(
 ) {
   const attendanceDate = new Date(date);
   const startOfMinute = new Date(attendanceDate.getTime());
-  const endOfMinute = new Date(attendanceDate.getTime() + 60 * 1000); // +1 minute
+  const endOfMinute = new Date(attendanceDate.getTime() + 60 * 1000);
 
   return await prisma.attendance.findMany({
     where: {

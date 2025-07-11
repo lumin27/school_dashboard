@@ -32,6 +32,7 @@ const InputField = ({
         {...inputProps}
         className='ring-[1.5px] ring-gray-300 rounded-md p-2 focus:outline-none text-sm w-full'
         {...inputProps}
+        autoComplete='off'
       />
       {error?.message && <p className='text-red-500'>{error.message}</p>}
     </div>

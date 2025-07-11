@@ -1,4 +1,3 @@
-// components/ClickableProfileImage.tsx
 "use client";
 
 import Image from "next/image";

@@ -140,8 +140,8 @@ export const assignmentSchema = z.object({
 export type AssignmentSchema = z.infer<typeof assignmentSchema>;
 
 export const resultSchema = z.object({
-  id: z.coerce.number().optional(), // Optional ID for updates
-  score: z.coerce.number().min(0, { message: "Score is required!" }), // Will turn "89" -> 89
+  id: z.coerce.number().optional(),
+  score: z.coerce.number().min(0, { message: "Score is required!" }),
   studentId: z.string().min(1, { message: "Student is required!" }),
   examId: z.coerce.number().optional(),
   assignmentId: z.coerce.number().optional(),

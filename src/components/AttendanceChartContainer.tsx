@@ -6,17 +6,15 @@ import AttendanceDetailsButton from "./AttendanceDetailsButton";
 const AttendanceChartContainer = async () => {
   const today = new Date();
   const dayOfWeek = today.getDay();
-  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-
-  const lastMonday = new Date(today);
-  lastMonday.setHours(0, 0, 0, 0);
+  const lastSunday = new Date(today);
+  lastSunday.setHours(0, 0, 0, 0);
   const now = new Date();
-  lastMonday.setDate(today.getDate() - daysSinceMonday);
+  lastSunday.setDate(today.getDate() - dayOfWeek);
 
   const resData = await prisma.attendance.findMany({
     where: {
       date: {
-        gte: lastMonday,
+        gte: lastSunday,
         lte: now,
       },
     },

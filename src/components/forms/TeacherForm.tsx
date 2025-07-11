@@ -223,6 +223,8 @@ const TeacherForm = ({
 
           {previewImage && (
             <Image
+              width={100}
+              height={100}
               src={previewImage}
               alt='Profile Preview'
               className='w-24 h-24 object-cover rounded-md mt-2'

@@ -97,7 +97,9 @@ const Navbar = async () => {
           </span>
         </div>
         {/* <UserButton /> */}
-        <ProfileImage src={user?.imageUrl as string} />
+        <div className='cursor-pointer '>
+          <ProfileImage src={user?.imageUrl as string} />
+        </div>
       </div>
     </div>
   );

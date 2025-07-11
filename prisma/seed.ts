@@ -73,7 +73,7 @@ async function main() {
   for (let i = 1; i <= 15; i++) {
     await prisma.teacher.create({
       data: {
-        id: `teacher${i}`, // Unique ID for the teacher
+        id: `teacher${i}`,
         username: `teacher${i}`,
         name: `TName${i}`,
         surname: `TSurname${i}`,
