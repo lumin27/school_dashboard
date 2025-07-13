@@ -13,7 +13,7 @@ export default clerkMiddleware(async (auth, req) => {
 
   for (const { matcher, allowedRoles } of matchers) {
     if (matcher(req) && !allowedRoles.includes(role)) {
-      return NextResponse.redirect(new URL("/${role}", req.url));
+      return NextResponse.redirect(new URL(`/${role}`, req.url));
     }
   }
 });
