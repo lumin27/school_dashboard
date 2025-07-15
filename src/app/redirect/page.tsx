@@ -1,23 +1,27 @@
 "use client";
+
 import { useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RedirectPage() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const router = useRouter();
+  const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !isSignedIn || redirected) return;
 
-    const role = user?.publicMetadata.role;
+    const role = user?.publicMetadata?.role;
 
-    if (role) {
+    if (typeof role === "string" && role.length > 0) {
+      setRedirected(true);
       router.replace(`/${role}`);
     } else {
+      setRedirected(true);
       router.replace("/");
     }
-  }, [user, isLoaded, router]);
+  }, [isLoaded, isSignedIn, user, redirected, router]);
 
   return <p className='text-center p-10'>Redirecting...</p>;
 }

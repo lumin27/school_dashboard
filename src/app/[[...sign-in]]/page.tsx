@@ -15,7 +15,6 @@ const LoginPage = () => {
     if (!isLoaded || !isSignedIn) return;
 
     const role = user?.publicMetadata?.role;
-    console.log("🧪 Production user role:", role);
 
     if (typeof role === "string") {
       router.replace(`/${role}`);
@@ -23,10 +22,6 @@ const LoginPage = () => {
       router.replace("/");
     }
   }, [isLoaded, isSignedIn, user, router]);
-  console.log("✅ user", user);
-  console.log("✅ isSignedIn", isSignedIn);
-  console.log("✅ isLoaded", isLoaded);
-  console.log("✅ role", user?.publicMetadata?.role);
 
   return (
     <div className='h-screen flex items-center justify-center bg-lmSkyLight'>
