@@ -12,15 +12,15 @@ const LoginPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded || !isSignedIn) return;
 
-    if (isSignedIn) {
-      const role = user?.publicMetadata.role;
-      if (role) {
-        router.replace(`/${role}`);
-      } else {
-        router.replace("/");
-      }
+    const role = user?.publicMetadata?.role;
+    console.log("🧪 Production user role:", role);
+
+    if (typeof role === "string") {
+      router.replace(`/${role}`);
+    } else {
+      router.replace("/");
     }
   }, [isLoaded, isSignedIn, user, router]);
 
