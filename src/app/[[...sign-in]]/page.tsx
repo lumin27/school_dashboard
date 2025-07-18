@@ -17,8 +17,10 @@ const LoginPage = () => {
     if (role) {
       router.push(`/${role}`);
     }
-  }, [user, router]);
+    console.log(role, "Role");
+  }, [user, router, user?.publicMetadata.role]);
 
+  console.log(user);
   return (
     <div className='h-screen flex items-center justify-center bg-lmSkyLight'>
       <SignIn.Root>
