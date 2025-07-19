@@ -14,18 +14,22 @@ const LoginPage = () => {
   useEffect(() => {
     if (!isLoaded || !user) return;
 
-    const role = user.publicMetadata?.role as string | undefined;
+    const role = user?.publicMetadata?.role;
 
-    console.log("User object:", user);
-    console.log("Role:", role);
+    console.log("👤 Full User:", user);
+    console.log("🧩 publicMetadata:", user.publicMetadata);
+    console.log("🔑 Extracted role:", role, typeof role);
 
-    if (role) {
-      router.push(`/${role}`);
+    if (
+      typeof role === "string" &&
+      ["admin", "teacher", "student", "parent"].includes(role)
+    ) {
+      router.replace(`/${role}`);
     } else {
-      router.push("/");
+      console.warn("Invalid or missing role. Redirecting to homepage.");
+      router.replace("/");
     }
   }, [isLoaded, user, router]);
-
   return (
     <div className='h-screen flex items-center justify-center bg-lmSkyLight'>
       <SignIn.Root>
