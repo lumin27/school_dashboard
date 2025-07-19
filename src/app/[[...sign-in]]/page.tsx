@@ -20,9 +20,9 @@ const LoginPage = () => {
     console.log("Role:", role);
 
     if (role) {
-      router.replace(`/${role}`);
+      router.push(`/${role}`);
     } else {
-      router.replace("/");
+      router.push("/");
     }
   }, [isLoaded, user, router]);
 
