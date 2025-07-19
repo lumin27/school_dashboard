@@ -98,6 +98,7 @@ const CreateSchoolForm = () => {
       <div className='flex mr-auto flex-col gap-2 w-full'>
         <span className='text-sm text-gray-400'>School Name</span>
         <input
+          disabled={!create}
           name='name'
           onChange={(e) => setName(e.target.value)}
           value={name}
@@ -110,6 +111,7 @@ const CreateSchoolForm = () => {
         <div>
           <span className='text-sm text-gray-400'>Opening Time</span>
           <input
+            disabled={!create}
             name='openingTime'
             type='time'
             value={minTime}
@@ -120,6 +122,7 @@ const CreateSchoolForm = () => {
         <div>
           <span className='text-sm text-gray-400'>Closing Time</span>
           <input
+            disabled={!create}
             name='closingTime'
             type='time'
             value={maxTime}
