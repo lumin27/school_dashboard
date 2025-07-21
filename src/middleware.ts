@@ -9,8 +9,10 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
 
 export default clerkMiddleware(async (auth, req) => {
   const { sessionClaims } = await auth();
+  const metadata = sessionClaims?.metadata as { role?: string };
+  const role = metadata?.role;
 
-  const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
+  console.log("🔍 Detected role in middleware:", role);
 
   for (const { matcher, allowedRoles } of matchers) {
     if (matcher(req)) {
