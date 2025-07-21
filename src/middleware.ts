@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { routeAccessMap } from "./lib/settings";
 import { NextResponse } from "next/server";
+import { routeAccessMap } from "./lib/settings";
 
 const matchers = Object.keys(routeAccessMap).map((route) => ({
   matcher: createRouteMatcher([route]),
@@ -9,9 +9,9 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
 
 export default clerkMiddleware(async (auth, req) => {
   const { sessionClaims } = await auth();
+
   const metadata = sessionClaims?.metadata as { role?: string };
   const role = metadata?.role;
-
   console.log("🔍 Detected role in middleware:", role);
 
   for (const { matcher, allowedRoles } of matchers) {
