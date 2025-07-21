@@ -9,11 +9,12 @@ const matchers = Object.keys(routeAccessMap).map((route) => ({
 
 export default clerkMiddleware(async (auth, req) => {
   const { sessionClaims } = await auth();
-  const role = (sessionClaims?.metadata as { role: string })?.role;
+
+  const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
 
   for (const { matcher, allowedRoles } of matchers) {
     if (matcher(req)) {
-      if (!allowedRoles.includes(role)) {
+      if (!role || !allowedRoles.includes(role)) {
         const redirectPath = role ? `/${role}` : "/";
         return NextResponse.redirect(new URL(redirectPath, req.url));
       }
