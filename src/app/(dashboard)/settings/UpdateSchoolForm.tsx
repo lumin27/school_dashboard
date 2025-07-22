@@ -51,6 +51,8 @@ const UpdateSchoolForm = ({
   return (
     <form
       onSubmit={handleSubmit}
+      encType='multipart/form-data'
+      method='POST'
       className='relative px-4 pb-5 flex gap-4 flex-col ring-[1.5px] ring-gray-200 bg-white items-center rounded-lg m-4 md:m-20 lg:mx-40'>
       <div className='flex items-center w-full relative'>
         <h1 className='text-lg font-bold mt-4 mr-auto'>

@@ -32,6 +32,9 @@ type CurrentState = {
 };
 
 export async function createSchool(formData: FormData) {
+  const rawData = Object.fromEntries(formData);
+  console.log("📦 Raw data:", rawData);
+
   const { name, openingTime, closingTime } = schoolSchema.parse(
     Object.fromEntries(formData)
   );
@@ -71,6 +74,9 @@ export async function createSchool(formData: FormData) {
 }
 
 export const updateSchool = async (formData: FormData) => {
+  const rawData = Object.fromEntries(formData);
+  console.log("📦 Raw data:", rawData);
+
   const { id, name, openingTime, closingTime } = schoolSchema.parse(
     Object.fromEntries(formData)
   );
