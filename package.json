@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma generate && next build && npx prisma migrate deploy",
+    "build": "npx prisma generate && next build && npx prisma db push",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
