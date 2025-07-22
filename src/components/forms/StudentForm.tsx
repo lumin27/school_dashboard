@@ -78,7 +78,11 @@ const StudentForm = ({
   console.log(relatedData, "related data");
 
   return (
-    <form className='p-4 flex flex-col gap-4' onSubmit={onSubmit}>
+    <form
+      className='p-4 flex flex-col gap-4'
+      encType='multipart/form-data'
+      method='POST'
+      onSubmit={onSubmit}>
       <h1 className='text-xl font-semibold'>
         {type === "create" ? "Create a new" : "Update the"} Student
       </h1>
