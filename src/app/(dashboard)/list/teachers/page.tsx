@@ -39,7 +39,7 @@ const TeacherListPage = async ({
     {
       header: "Classes",
       accessor: "classes",
-      className: "hidden md:table-cell",
+      // className: "hidden md:table-cell",
     },
     {
       header: "Phone",
@@ -60,14 +60,16 @@ const TeacherListPage = async ({
       className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lmPurpleLight'>
       <td className='flex items-center gap-4 p-4 pl-2'>
         <Image
-          src={"/noAvatar.png"}
+          src={item.img || "/noAvatar.png"}
           alt={item.name}
           width={40}
           height={40}
           className='md:hidden xl:block w-10 h-10 rounded-full object-cover'
         />
         <div className='flex flex-col'>
-          <h3 className='font-semibold'>{item.name}</h3>
+          <h3 className='font-semibold max-w-[120px] truncate text-ellipsis whitespace-nowrap overflow-hidden'>
+            {item.name + " " + item.surname}
+          </h3>
           <h4 className='text-gray-500 text-xs'>{item.email}</h4>
         </div>
       </td>
@@ -80,9 +82,7 @@ const TeacherListPage = async ({
       <td className='hidden md:table-cell'>
         {item.subjects.map((subject) => subject.name).join(", ")}
       </td>
-      <td className='hidden md:table-cell'>
-        {item.classes.map((cls) => cls.name).join(", ")}
-      </td>
+      <td>{item.classes.map((cls) => cls.name).join(", ")}</td>
       <td className='hidden lg:table-cell'>{item.phone}</td>
       <td className='hidden lg:table-cell'>{item.address}</td>
       <td>

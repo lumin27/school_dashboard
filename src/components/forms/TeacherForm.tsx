@@ -77,11 +77,7 @@ const TeacherForm = ({
   const { subjects } = relatedData;
 
   return (
-    <form
-      className='flex flex-col gap-8'
-      onSubmit={onSubmit}
-      encType='multipart/form-data'
-      method='POST'>
+    <form className='flex flex-col gap-8' onSubmit={onSubmit}>
       <h1 className='text-xl font-semibold'>
         {type === "create" ? "Create a new teacher" : "Update the teacher"}
       </h1>
@@ -224,7 +220,6 @@ const TeacherForm = ({
               }
             }}
           />
-
           {previewImage && (
             <Image
               width={100}

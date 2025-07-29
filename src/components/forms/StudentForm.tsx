@@ -39,12 +39,6 @@ const StudentForm = ({
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (type === "update" && data?.img) {
-      setPreviewImage(data.img);
-      setValue("img", data.img);
-    }
-  }, [type, data?.img, setValue]);
   const [state, formAction] = React.useActionState(
     type === "create" ? createStudent : updateStudent,
     {
@@ -60,13 +54,19 @@ const StudentForm = ({
     });
   });
 
+  useEffect(() => {
+    if (type === "update" && data?.img) {
+      setPreviewImage(data.img);
+      setValue("img", data.img);
+    }
+  }, [type, data?.img, setValue]);
+
   const router = useRouter();
 
   useEffect(() => {
     if (state.error || state.success) {
       setLoading(false);
     }
-
     if (state.success) {
       toast(`Student has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
@@ -74,8 +74,7 @@ const StudentForm = ({
     }
   }, [state, router, type, setOpen]);
 
-  const { grades, classes } = relatedData ?? {};
-  console.log(relatedData, "related data");
+  const { grades, classes } = relatedData;
 
   return (
     <form
@@ -246,6 +245,7 @@ const StudentForm = ({
             </p>
           )}
         </div>
+        <input type='hidden' {...register("img")} />
         <div className='flex flex-col gap-2 w-full md:w-1/4'>
           <label className='text-xs text-gray-500'>Profile Image</label>
           <input
@@ -261,9 +261,10 @@ const StudentForm = ({
               }
             }}
           />
-
           {previewImage && (
             <Image
+              width={100}
+              height={100}
               src={previewImage}
               alt='Profile Preview'
               className='w-24 h-24 object-cover rounded-md mt-2'

@@ -53,7 +53,6 @@ const FinanceChart: React.FC<FinanceChartProps> = ({ data }) => {
             axisLine={false}
           />
           <YAxis
-            dataKey='name'
             axisLine={false}
             tick={{ fill: "#d1d5db" }}
             tickLine={false}
@@ -70,14 +69,14 @@ const FinanceChart: React.FC<FinanceChartProps> = ({ data }) => {
           <Line
             type='monotone'
             dataKey='income'
-            stroke='#c3ebfa'
-            strokeWidth={5}
+            stroke='#22c55e'
+            strokeWidth={2}
           />
           <Line
             type='monotone'
             dataKey='expense'
-            stroke='#cfceff'
-            strokeWidth={5}
+            stroke='#ef4444'
+            strokeWidth={2}
           />
         </LineChart>
       </ResponsiveContainer>

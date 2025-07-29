@@ -101,73 +101,73 @@ const ParentForm = ({
           defaultValue={data?.password || ""}
           error={errors.password}
         />
-      </div>
-      <span className='text-xs text-gray-400 font-medium'>
-        Personal Information
-      </span>
-      <div className='flex gap-4 justify-between flex-wrap'>
-        <InputField
-          label='First Name'
-          name='name'
-          type='text'
-          register={register}
-          defaultValue={data?.name || ""}
-          error={errors.name}
-        />
-        <InputField
-          label='Last Name'
-          type='text'
-          register={register}
-          name='surname'
-          defaultValue={data?.surname || ""}
-          error={errors.surname}
-        />
-        <InputField
-          label='Phone Number'
-          type='text'
-          register={register}
-          name='phone'
-          defaultValue={data?.phone || ""}
-          error={errors.phone}
-        />
-        <InputField
-          label='Address'
-          name='address'
-          type='text'
-          register={register}
-          defaultValue={data?.address || ""}
-          error={errors.address}
-        />
-        {data && (
+        <span className='text-xs text-gray-400 font-medium'>
+          Personal Information
+        </span>
+        <div className='flex gap-4 justify-between flex-wrap'>
           <InputField
-            label='Id'
-            name='id'
-            defaultValue={data?.id || ""}
+            label='First Name'
+            name='name'
+            type='text'
             register={register}
-            error={errors?.id}
-            hidden
+            defaultValue={data?.name || ""}
+            error={errors.name}
           />
-        )}
-        <div className='flex flex-col gap-2 w-full md:w-1/3'>
-          <label className='text-xs text-gray-500'>Students</label>
-          <select
-            multiple
-            className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
-            {...register("students")}
-            defaultValue={data?.students || []}>
-            {students.map(
-              (student: { id: string; name: string; surname: string }) => (
-                <option value={student.id} key={student.id}>
-                  {student.name + " " + student.surname}
-                </option>
-              )
-            )}
-          </select>
-          {errors.students?.message && (
-            <p className='text-xs text-red-400'>
-              {errors.students.message.toString()}
-            </p>
+          <InputField
+            label='Last Name'
+            type='text'
+            register={register}
+            name='surname'
+            defaultValue={data?.surname || ""}
+            error={errors.surname}
+          />
+          <InputField
+            label='Phone Number'
+            type='text'
+            register={register}
+            name='phone'
+            defaultValue={data?.phone || ""}
+            error={errors.phone}
+          />
+          <InputField
+            label='Address'
+            name='address'
+            type='text'
+            register={register}
+            defaultValue={data?.address || ""}
+            error={errors.address}
+          />
+          {data && (
+            <InputField
+              label='Id'
+              name='id'
+              defaultValue={data?.id || ""}
+              register={register}
+              error={errors?.id}
+              hidden
+            />
           )}
+          <div className='flex flex-col gap-2 w-full md:w-1/3'>
+            <label className='text-xs text-gray-500'>Students</label>
+            <select
+              multiple
+              className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
+              {...register("students")}
+              defaultValue={data?.students || []}>
+              {students.map(
+                (student: { id: string; name: string; surname: string }) => (
+                  <option value={student.id} key={student.id}>
+                    {student.name + " " + student.surname}
+                  </option>
+                )
+              )}
+            </select>
+            {errors.students?.message && (
+              <p className='text-xs text-red-400'>
+                {errors.students.message.toString()}
+              </p>
+            )}
+          </div>
         </div>
       </div>
       {state.error && <p className='text-red-500'>Something went wrong!</p>}

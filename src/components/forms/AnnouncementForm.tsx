@@ -74,7 +74,11 @@ const AnnouncementForm = ({
   const { classes } = relatedData ?? {};
 
   return (
-    <form className='flex flex-col gap-8' onSubmit={onSubmit}>
+    <form
+      className='flex flex-col gap-8'
+      onSubmit={onSubmit}
+      encType='multipart/form-data'
+      method='POST'>
       <h1 className='text-xl font-semibold'>
         {type === "create"
           ? "Create a new announcement"

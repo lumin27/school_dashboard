@@ -32,9 +32,6 @@ type CurrentState = {
 };
 
 export async function createSchool(formData: FormData) {
-  const rawData = Object.fromEntries(formData);
-  console.log("📦 Raw data:", rawData);
-
   const { name, openingTime, closingTime } = schoolSchema.parse(
     Object.fromEntries(formData)
   );
@@ -74,9 +71,6 @@ export async function createSchool(formData: FormData) {
 }
 
 export const updateSchool = async (formData: FormData) => {
-  const rawData = Object.fromEntries(formData);
-  console.log("📦 Raw data:", rawData);
-
   const { id, name, openingTime, closingTime } = schoolSchema.parse(
     Object.fromEntries(formData)
   );
@@ -532,7 +526,7 @@ export const updateStudent = async (
         email: data.email || null,
         phone: data.phone || null,
         address: data.address,
-        img: data.img || null,
+        img: imageUrl || null,
         bloodType: data.bloodType,
         sex: data.sex,
         birthday: data.birthday || null,
@@ -1208,7 +1202,6 @@ export async function getTeacherLessons() {
   const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role: string })?.role;
   if (!userId || !role) {
-    console.error("Unauthorized role or missing user ID");
     return [];
   }
 

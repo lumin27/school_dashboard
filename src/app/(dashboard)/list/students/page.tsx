@@ -28,15 +28,14 @@ const StudentListPage = async ({
       header: "Student Name",
       accessor: "name",
     },
-    {
-      header: "Student ID",
-      accessor: "studentId",
-      className: "hidden md:table-cell",
-    },
+    // {
+    //   header: "Student ID",
+    //   accessor: "studentId",
+    //   className: "hidden md:table-cell",
+    // },
     {
       header: "Grade",
       accessor: "grade",
-      className: "hidden md:table-cell",
     },
     {
       header: "Phone",
@@ -64,16 +63,18 @@ const StudentListPage = async ({
           className='md:hidden xl:block w-10 h-10 rounded-full object-cover'
         />
         <div className='flex flex-col'>
-          <h3 className='font-semibold'>{item.name}</h3>
+          <h3 className='font-semibold max-w-[120px] truncate text-ellipsis whitespace-nowrap overflow-hidden'>
+            {item.name + " " + item.surname}
+          </h3>
           <p className='text-gray-500 text-xs'>{item.class.name}</p>
         </div>
       </td>
-      <td
+      {/* <td
         className='hidden md:table-cell max-w-[120px] truncate text-ellipsis whitespace-nowrap overflow-hidden'
         title={item.id}>
         {item.id}
-      </td>
-      <td className='hidden md:table-cell'>{item.gradeId}</td>
+      </td> */}
+      <td className=''>{item.gradeId}</td>
       <td className='hidden md:table-cell'>{item.phone}</td>
       <td className='hidden md:table-cell'>{item.address}</td>
       <td>

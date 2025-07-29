@@ -34,7 +34,6 @@ const BigCalendar = ({
   let max = toTimeDate(schoolData.closingTime || "17:00");
 
   if (min >= max) {
-    console.warn("⚠️ Invalid min/max times — using fallback values.");
     min = toTimeDate("08:00");
     max = toTimeDate("17:00");
   }

@@ -13,20 +13,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (!isLoaded || !user) return;
-
     const role = user?.publicMetadata?.role;
-
-    console.log("👤 Full User:", user);
-    console.log("🧩 publicMetadata:", user.publicMetadata);
-    console.log("🔑 Extracted role:", role, typeof role);
-
     if (
       typeof role === "string" &&
       ["admin", "teacher", "student", "parent"].includes(role)
     ) {
       router.replace(`/${role}`);
     } else {
-      console.warn("Invalid or missing role. Redirecting to homepage.");
       router.replace("/");
     }
   }, [isLoaded, user, router]);

@@ -29,7 +29,6 @@ const ParentListPage = async ({
     {
       header: "Parent ID",
       accessor: "id",
-      className: "hidden md:table-cell",
     },
     {
       header: "Student Names",
@@ -55,12 +54,14 @@ const ParentListPage = async ({
       className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lmPurpleLight'>
       <td className='flex items-center gap-4 p-4 pl-2'>
         <div className='flex flex-col'>
-          <h3 className='font-semibold'>{item.name + " " + item.surname}</h3>
+          <h3 className='font-semibold max-w-[120px] truncate text-ellipsis whitespace-nowrap overflow-hidden'>
+            {item.name + " " + item.surname}
+          </h3>
           <p className='text-gray-500 text-xs'>{item?.email || "-"}</p>
         </div>
       </td>
       <td
-        className='hidden md:table-cell max-w-[120px] truncate text-ellipsis whitespace-nowrap overflow-hidden'
+        className='max-w-[100px] truncate text-ellipsis whitespace-nowrap overflow-hidden'
         title={item.id}>
         {item.id}
       </td>
