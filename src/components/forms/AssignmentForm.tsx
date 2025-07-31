@@ -84,7 +84,7 @@ const AssignmentForm = ({
 
       <div className='flex justify-between flex-wrap gap-4'>
         <InputField
-          label='Exam Title'
+          label='Assignment Title'
           name='title'
           defaultValue={data?.title ?? ""}
           register={register}
