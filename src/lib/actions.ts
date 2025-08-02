@@ -322,37 +322,44 @@ export const updateTeacher = async (
       imageUrl = uploadResponse.secure_url;
     }
 
-    const user = await clerkClient.users.updateUser(data.id, {
-      username: data.username,
-      ...(data.password !== "" && { password: data.password }),
-      firstName: data.name,
-      lastName: data.surname,
-      publicMetadata: { role: "teacher" },
-    });
-    await prisma.teacher.update({
-      where: { id: data.id },
-      data: {
-        ...(data.password !== "" && { password: data.password }),
+    // Use transaction to ensure data consistency between Clerk and database
+    await prisma.$transaction(async (tx) => {
+      // Update user in Clerk
+      await clerkClient.users.updateUser(data.id!, {
         username: data.username,
-        name: data.name,
-        surname: data.surname,
-        email: data.email || null,
-        phone: data.phone || null,
-        birthday: data.birthday || null,
-        address: data.address,
-        img: imageUrl || null,
-        bloodType: data.bloodType,
-        sex: data.sex,
-        subjects: {
-          set: data.subjects?.map((subjectId) => ({
-            id: Number(subjectId),
-          })),
+        ...(data.password !== "" && { password: data.password }),
+        firstName: data.name,
+        lastName: data.surname,
+        publicMetadata: { role: "teacher" },
+      });
+
+      // Update teacher in database (remove password field since Clerk handles auth)
+      await tx.teacher.update({
+        where: { id: data.id },
+        data: {
+          username: data.username,
+          name: data.name,
+          surname: data.surname,
+          email: data.email || null,
+          phone: data.phone || null,
+          birthday: data.birthday || null,
+          address: data.address,
+          img: imageUrl || null,
+          bloodType: data.bloodType,
+          sex: data.sex,
+          subjects: {
+            set: data.subjects?.map((subjectId) => ({
+              id: parseInt(subjectId),
+            })),
+          },
         },
-      },
+      });
     });
+
+    revalidatePath("/list/teachers");
     return { success: true, error: false };
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log("Update teacher error:", error.errors || error);
     return { success: false, error: true };
   }
 };
