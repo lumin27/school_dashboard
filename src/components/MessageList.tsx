@@ -7,7 +7,7 @@ interface Message {
   id: string;
   content: string;
   senderId?: string;
-  recipientId?: string;
+  recipients?: { recipientId: string }[];
   createdAt: Date;
 }
 
@@ -96,10 +96,8 @@ export default function MessageList({
           <h2 className='text-2xl font-bold mb-2'>Sent Messages</h2>
           <div className='flex flex-col gap-2'>
             {sentMessages.map((msg) => {
-              const recipient = recipientMap[msg.recipientId ?? ""] || {
-                name: "Unknown",
-                surname: "",
-              };
+              const recipients =
+                msg.recipients?.map((r) => recipientMap[r.recipientId]) || [];
               return (
                 <div
                   key={msg.id}
@@ -108,10 +106,20 @@ export default function MessageList({
                     <p className='text-gray-900 mb-1'>{msg.content}</p>
                     <span className='text-sm text-gray-700 mb-2'>
                       To:{" "}
-                      {recipient.name.length > 0
-                        ? recipient.name
-                        : recipient.username}{" "}
-                      {recipient.surname}
+                      {recipients.length > 0
+                        ? recipients.map((recipient, index) => {
+                            const name =
+                              recipient?.name?.length > 0
+                                ? recipient.name
+                                : recipient?.username || "Unknown";
+                            return (
+                              <span key={index}>
+                                {name} {recipient?.surname || ""}
+                                {index < recipients.length - 1 ? ", " : ""}
+                              </span>
+                            );
+                          })
+                        : "Unknown"}
                     </span>
                     <span className='text-sm text-gray-500'>
                       {new Date(msg.createdAt).toLocaleString()}

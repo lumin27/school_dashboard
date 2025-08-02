@@ -1076,13 +1076,23 @@ export const createAnnouncement = async (
   data: AnnouncementSchema
 ) => {
   try {
-    await prisma.announcement.create({
-      data: {
-        title: data.title,
-        description: data.description as string,
-        date: data.date,
-        classId: data.classId,
-      },
+    await prisma.$transaction(async (tx) => {
+      const announcement = await tx.announcement.create({
+        data: {
+          title: data.title,
+          description: data.description as string,
+          date: data.date,
+        },
+      });
+
+      if (data.classIds && data.classIds.length > 0) {
+        await tx.announcementClass.createMany({
+          data: data.classIds.map((classId) => ({
+            announcementId: announcement.id,
+            classId: classId,
+          })),
+        });
+      }
     });
     return { success: true, error: false };
   } catch (error) {
@@ -1095,14 +1105,28 @@ export const updateAnnouncement = async (
   data: AnnouncementSchema
 ) => {
   try {
-    await prisma.announcement.update({
-      where: { id: data.id },
-      data: {
-        title: data.title,
-        description: data.description,
-        date: data.date,
-        classId: data.classId,
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.announcement.update({
+        where: { id: data.id },
+        data: {
+          title: data.title,
+          description: data.description,
+          date: data.date,
+        },
+      });
+
+      await tx.announcementClass.deleteMany({
+        where: { announcementId: data.id },
+      });
+
+      if (data.classIds && data.classIds.length > 0) {
+        await tx.announcementClass.createMany({
+          data: data.classIds.map((classId) => ({
+            announcementId: data.id!,
+            classId: classId,
+          })),
+        });
+      }
     });
     return { success: true, error: false };
   } catch (error) {
@@ -1499,13 +1523,41 @@ export async function fetchRecipients() {
     case "admin": {
       const [teachers, students, parents] = await Promise.all([
         prisma.teacher.findMany(),
-        prisma.student.findMany(),
+        prisma.student.findMany({
+          include: {
+            class: true,
+          },
+        }),
         prisma.parent.findMany(),
       ]);
-      return [...teachers, ...students, ...parents].map((u) => ({
-        value: u.id,
-        label: `${u.name} ${u.surname} (${u.username})`,
-      }));
+
+      // Group students by class
+      const studentsByClass = students.reduce((acc, student) => {
+        const className = student.class.name;
+        if (!acc[className]) {
+          acc[className] = [];
+        }
+        acc[className].push({
+          value: student.id,
+          label: `${student.name} ${student.surname} (${student.username})`,
+          role: "student",
+        });
+        return acc;
+      }, {} as { [key: string]: { value: string; label: string; role: string }[] });
+
+      return {
+        teachers: teachers.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "teacher",
+        })),
+        ...studentsByClass, // Spread the class-based student groups
+        parents: parents.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "parent",
+        })),
+      };
     }
     case "teacher": {
       const teacher = await prisma.teacher.findUnique({
@@ -1513,7 +1565,16 @@ export async function fetchRecipients() {
         include: {
           lessons: {
             include: {
-              class: { include: { students: { include: { parent: true } } } },
+              class: {
+                include: {
+                  students: {
+                    include: {
+                      parent: true,
+                      class: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -1522,12 +1583,34 @@ export async function fetchRecipients() {
       const students = lessons.flatMap((lesson) => lesson.class.students);
       const parents = students.map((s: { parent: Parent }) => s.parent);
       const admin = await prisma.admin.findMany();
-      const allowed = [...admin, ...parents];
-      if (students.length > 0) allowed.push(...students);
-      return allowed.map((u) => ({
-        value: u.id,
-        label: `${u.name} ${u.surname} (${u.username})`,
-      }));
+
+      // Group students by class
+      const studentsByClass = students.reduce((acc, student) => {
+        const className = student.class.name;
+        if (!acc[className]) {
+          acc[className] = [];
+        }
+        acc[className].push({
+          value: student.id,
+          label: `${student.name} ${student.surname} (${student.username})`,
+          role: "student",
+        });
+        return acc;
+      }, {} as { [key: string]: { value: string; label: string; role: string }[] });
+
+      return {
+        admins: admin.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "admin",
+        })),
+        ...studentsByClass, // Spread the class-based student groups
+        parents: parents.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "parent",
+        })),
+      };
     }
     case "student": {
       const student = await prisma.student.findUnique({
@@ -1536,12 +1619,23 @@ export async function fetchRecipients() {
       });
       const supervisor = student?.class.supervisor;
       const admin = await prisma.admin.findMany();
-      const allowed = [...admin];
-      if (supervisor) allowed.push(supervisor);
-      return allowed.map((u) => ({
-        value: u.id,
-        label: ` ${u.name} ${u.surname} (${u.username})`,
-      }));
+
+      return {
+        admins: admin.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "admin",
+        })),
+        teachers: supervisor
+          ? [
+              {
+                value: supervisor.id,
+                label: `${supervisor.name} ${supervisor.surname} (${supervisor.username})`,
+                role: "teacher",
+              },
+            ]
+          : [],
+      };
     }
     case "parent": {
       const parent = await prisma.parent.findUnique({
@@ -1560,21 +1654,22 @@ export async function fetchRecipients() {
         .filter(Boolean)
         .map(([id, u]) => u);
 
-      return unique
-        .map((u) => {
-          if (typeof u === "object" && u !== null) {
-            return {
-              value: u.id,
-              label: `${u.name} ${u.surname} (${u.username})`,
-            };
-          } else {
-            return null;
-          }
-        })
-        .filter(Boolean);
+      return {
+        admins: admin.map((u) => ({
+          value: u.id,
+          label: `${u.name} ${u.surname} (${u.username})`,
+          role: "admin",
+        })),
+        teachers:
+          supervisors?.map((u) => ({
+            value: u.id,
+            label: `${u.name} ${u.surname} (${u.username})`,
+            role: "teacher",
+          })) || [],
+      };
     }
     default:
-      return [];
+      return {};
   }
 }
 
@@ -1582,18 +1677,28 @@ export async function sendMessage(formData: FormData) {
   const { userId } = await auth();
   if (!userId) return { error: "Unauthorized" };
 
-  const { recipientId, content } = messageSchema.parse({
-    recipientId: formData.get("recipient")?.toString(),
+  const { recipientIds, content } = messageSchema.parse({
+    recipientIds: formData.getAll("recipients").map((r) => r.toString()),
     content: formData.get("message")?.toString(),
   });
 
   try {
-    await prisma.message.create({
-      data: {
-        senderId: userId!,
-        recipientId,
-        content,
-      },
+    await prisma.$transaction(async (tx) => {
+      const message = await tx.message.create({
+        data: {
+          senderId: userId!,
+          content,
+        },
+      });
+
+      if (recipientIds && recipientIds.length > 0) {
+        await tx.messageRecipient.createMany({
+          data: recipientIds.map((recipientId) => ({
+            messageId: message.id,
+            recipientId: recipientId,
+          })),
+        });
+      }
     });
     revalidatePath("/list/messages");
     return { success: "Message sent!" };
@@ -1610,14 +1715,22 @@ export async function deleteMessage(formData: FormData) {
   const id = formData.get("id") as string;
   const message = await prisma.message.findUnique({
     where: { id },
+    include: {
+      recipients: true,
+    },
   });
 
   try {
     if (!message) throw new Error("Message not found");
+    const isSender = message.senderId === userId;
+    const isRecipient = message.recipients.some(
+      (r) => r.recipientId === userId
+    );
 
-    if (message.senderId !== userId && message.recipientId !== userId) {
+    if (!isSender && !isRecipient) {
       throw new Error("Not allowed to delete this message");
     }
+
     await prisma.message.delete({ where: { id } });
     revalidatePath("/list/messages");
     return { success: "Message deleted!" };

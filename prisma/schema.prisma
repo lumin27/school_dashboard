@@ -98,7 +98,7 @@ model Class {
   gradeId       Int
   grade         Grade          @relation(fields: [gradeId], references: [id])
   events        Event[]
-  announcements Announcement[]
+  announcementClasses AnnouncementClass[]
 }
 
 model Subject {
@@ -188,8 +188,17 @@ model Announcement {
   description String
   date        DateTime
 
-  classId     Int?
-  class   Class? @relation(fields: [classId], references: [id])
+  classes AnnouncementClass[]
+}
+
+model AnnouncementClass {
+  id             Int          @id @default(autoincrement())
+  announcementId Int
+  classId        Int
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  class          Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, classId])
 }
 
 model Transaction {
@@ -208,7 +217,16 @@ model Message {
   content     String
   createdAt   DateTime @default(now())
   senderId    String
+  recipients  MessageRecipient[]
+}
+
+model MessageRecipient {
+  id          String   @id @default(cuid())
+  messageId   String
   recipientId String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  @@unique([messageId, recipientId])
 }
 
 enum TransactionType {

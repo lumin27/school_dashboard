@@ -16,11 +16,25 @@ const Announcements = async () => {
     orderBy: {
       date: "desc",
     },
+    include: {
+      classes: {
+        include: {
+          class: true,
+        },
+      },
+    },
     where: {
       ...(role !== "admin" && {
         OR: [
-          { classId: null },
-          { class: roleConditions[role as keyof typeof roleConditions] || {} },
+          { classes: { none: {} } }, // Announcements with no classes (global)
+          {
+            classes: {
+              some: {
+                class:
+                  roleConditions[role as keyof typeof roleConditions] || {},
+              },
+            },
+          },
         ],
       }),
     },
@@ -54,6 +68,16 @@ const Announcements = async () => {
             <p className='text-sm text-gray-400 mt-1'>
               {announcement.description}
             </p>
+            {announcement.classes.length > 0 && (
+              <div className='mt-2'>
+                <span className='text-xs text-gray-500'>Classes: </span>
+                <span className='text-xs text-blue-600'>
+                  {announcement.classes
+                    .map((ac: any) => ac.class.name)
+                    .join(", ")}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>

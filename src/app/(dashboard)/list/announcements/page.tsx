@@ -41,12 +41,16 @@ const AnnouncementListPage = async ({
       : []),
   ];
 
-  const renderRow = (item: Announcement & { class: Class }) => (
+  const renderRow = (item: Announcement & { classes: { class: Class }[] }) => (
     <tr
       key={item.id}
       className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lmPurpleLight'>
       <td className='flex items-center gap-4 p-4 pl-2'>{item.title}</td>
-      <td>{item.class?.name || "-"}</td>
+      <td>
+        {item.classes.length > 0
+          ? item.classes.map((ac: any) => ac.class.name).join(", ")
+          : "-"}
+      </td>
       <td className='hidden md:table-cell'>
         {new Intl.DateTimeFormat("en-US").format(item.date)}
       </td>
@@ -82,10 +86,14 @@ const AnnouncementListPage = async ({
             };
             break;
           case "className":
-            query.class = {
-              name: {
-                contains: value,
-                mode: "insensitive",
+            query.classes = {
+              some: {
+                class: {
+                  name: {
+                    contains: value,
+                    mode: "insensitive",
+                  },
+                },
               },
             };
             break;
@@ -104,9 +112,13 @@ const AnnouncementListPage = async ({
 
   if (role !== "admin") {
     query.OR = [
-      { classId: null },
+      { classes: { none: {} } }, // Announcements with no classes (global)
       {
-        class: roleConditions[role as keyof typeof roleConditions] || {},
+        classes: {
+          some: {
+            class: roleConditions[role as keyof typeof roleConditions] || {},
+          },
+        },
       },
     ];
   }
@@ -117,7 +129,11 @@ const AnnouncementListPage = async ({
       skip: (p - 1) * ITEM_PER_PAGE,
       take: ITEM_PER_PAGE,
       include: {
-        class: true,
+        classes: {
+          include: {
+            class: true,
+          },
+        },
       },
       orderBy: orderBy,
     }),

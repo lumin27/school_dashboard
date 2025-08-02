@@ -19,9 +19,13 @@ const Navbar = async () => {
 
   if (role !== "admin") {
     query.OR = [
-      { classId: null },
+      { classes: { none: {} } }, // Announcements with no classes (global)
       {
-        class: roleConditions[role as keyof typeof roleConditions] || {},
+        classes: {
+          some: {
+            class: roleConditions[role as keyof typeof roleConditions] || {},
+          },
+        },
       },
     ];
   }
@@ -37,7 +41,11 @@ const Navbar = async () => {
       date: "desc",
     },
     include: {
-      class: true,
+      classes: {
+        include: {
+          class: true,
+        },
+      },
     },
   });
 
@@ -46,7 +54,11 @@ const Navbar = async () => {
       createdAt: {
         gt: new Date(Date.now() - 24 * 60 * 60 * 1000),
       },
-      recipientId: user?.id,
+      recipients: {
+        some: {
+          recipientId: user?.id,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

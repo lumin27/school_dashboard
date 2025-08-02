@@ -114,21 +114,29 @@ const AnnouncementForm = ({
             hidden
           />
         )}
-        <div className='flex flex-col gap-2 w-full md:w-1/4'>
+        <div className='flex flex-col gap-2 w-full md:w-1/2'>
           <label className='text-xs text-gray-500'>Classes</label>
-          <select
-            className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
-            {...register("classId")}
-            defaultValue={data?.classId ?? ""}>
+          <div className='max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2'>
             {classes?.map((classItem: { id: number; name: string }) => (
-              <option key={classItem.id} value={classItem.id}>
-                {classItem.name}
-              </option>
+              <label
+                key={classItem.id}
+                className='flex items-center gap-2 p-1 hover:bg-gray-50 cursor-pointer'>
+                <input
+                  type='checkbox'
+                  value={classItem.id}
+                  {...register("classIds")}
+                  defaultChecked={data?.classes?.some(
+                    (c: any) => c.classId === classItem.id
+                  )}
+                  className='rounded'
+                />
+                <span className='text-sm'>{classItem.name}</span>
+              </label>
             ))}
-          </select>
-          {errors.classId?.message && (
+          </div>
+          {errors.classIds?.message && (
             <p className='text-xs text-red-400'>
-              {errors.classId.message.toString()}
+              {errors.classIds.message.toString()}
             </p>
           )}
         </div>

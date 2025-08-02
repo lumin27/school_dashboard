@@ -11,12 +11,15 @@ const MessagesPage = async () => {
     return <div className='text-center text-red-500 mt-10'>Unauthorized</div>;
 
   const messages = await prisma.message.findMany({
-    where: { recipientId: userId },
-    select: {
-      id: true,
-      content: true,
-      senderId: true,
-      createdAt: true,
+    where: {
+      recipients: {
+        some: {
+          recipientId: userId,
+        },
+      },
+    },
+    include: {
+      recipients: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -25,11 +28,8 @@ const MessagesPage = async () => {
 
   const sentMessages = await prisma.message.findMany({
     where: { senderId: userId },
-    select: {
-      id: true,
-      content: true,
-      recipientId: true,
-      createdAt: true,
+    include: {
+      recipients: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -37,6 +37,9 @@ const MessagesPage = async () => {
   });
 
   const senderIds = messages.map((msg: any) => msg.senderId);
+  const recipientIds = sentMessages.flatMap((msg: any) =>
+    msg.recipients.map((r: any) => r.recipientId)
+  );
 
   const [parents, teachers, students, admins] = await Promise.all([
     prisma.parent.findMany({
@@ -68,8 +71,6 @@ const MessagesPage = async () => {
       username: user.username ?? "",
     };
   });
-
-  const recipientIds = sentMessages.map((msg: any) => msg.recipientId);
 
   const [parents2, teachers2, students2, admins2] = await Promise.all([
     prisma.parent.findMany({

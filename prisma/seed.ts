@@ -211,13 +211,44 @@ async function main() {
 
   // ANNOUNCEMENT
   for (let i = 1; i <= 5; i++) {
-    await prisma.announcement.create({
+    const announcement = await prisma.announcement.create({
       data: {
         title: `Announcement ${i}`,
         description: `Description for Announcement ${i}`,
         date: new Date(),
+      },
+    });
+
+    // Create class association
+    await prisma.announcementClass.create({
+      data: {
+        announcementId: announcement.id,
         classId: (i % 5) + 1,
       },
+    });
+  }
+
+  // MESSAGE
+  for (let i = 1; i <= 3; i++) {
+    const message = await prisma.message.create({
+      data: {
+        content: `Sample message ${i}`,
+        senderId: `teacher${i}`,
+      },
+    });
+
+    // Create recipient associations
+    await prisma.messageRecipient.createMany({
+      data: [
+        {
+          messageId: message.id,
+          recipientId: `student${i}`,
+        },
+        {
+          messageId: message.id,
+          recipientId: `parent${i}`,
+        },
+      ],
     });
   }
 }

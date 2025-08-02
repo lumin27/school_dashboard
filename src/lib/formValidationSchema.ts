@@ -180,7 +180,9 @@ export const announcementSchema = z.object({
   title: z.string().min(1, { message: "Subject name is required!" }),
   description: z.string().optional(),
   date: z.coerce.date({ message: "Date is required!" }),
-  classId: z.coerce.number().optional(),
+  classIds: z
+    .array(z.coerce.number())
+    .min(1, { message: "At least one class is required!" }),
 });
 
 export type AnnouncementSchema = z.infer<typeof announcementSchema>;
@@ -198,7 +200,9 @@ export type TransactionSchema = z.infer<typeof transactionSchema>;
 export const messageSchema = z.object({
   id: z.string().optional(),
   content: z.string().min(1, { message: "Message is required!" }),
-  recipientId: z.string().min(1, { message: "Recipient is required!" }),
+  recipientIds: z
+    .array(z.string())
+    .min(1, { message: "At least one recipient is required!" }),
 });
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
