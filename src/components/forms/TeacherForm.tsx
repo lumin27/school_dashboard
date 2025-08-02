@@ -54,11 +54,31 @@ const TeacherForm = ({
   });
 
   useEffect(() => {
-    if (type === "update" && data?.img) {
-      setPreviewImage(data.img);
-      setValue("img", data.img);
+    if (type === "update" && data) {
+      // Set all form values when updating
+      if (data.username) setValue("username", data.username);
+      if (data.email) setValue("email", data.email);
+      if (data.password) setValue("password", data.password);
+      if (data.name) setValue("name", data.name);
+      if (data.surname) setValue("surname", data.surname);
+      if (data.phone) setValue("phone", data.phone);
+      if (data.address) setValue("address", data.address);
+      if (data.bloodType) setValue("bloodType", data.bloodType);
+      if (data.birthday) {
+        const birthDate = new Date(data.birthday);
+        if (!isNaN(birthDate.getTime())) {
+          setValue("birthday", birthDate.toISOString().split("T")[0]);
+        }
+      }
+      if (data.sex) setValue("sex", data.sex);
+      if (data.subjects) setValue("subjects", data.subjects.map((sub: any) => sub.id.toString()));
+      if (data.img) {
+        setValue("img", data.img);
+        setPreviewImage(data.img);
+      }
+      if (data.id) setValue("id", data.id);
     }
-  }, [type, data?.img, setValue]);
+  }, [type, data, setValue]);
 
   const router = useRouter();
 
@@ -173,8 +193,7 @@ const TeacherForm = ({
           <label className='text-xs text-gray-500'>Sex</label>
           <select
             className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
-            {...register("sex")}
-            defaultValue={data?.sex}>
+            {...register("sex")}>
             <option value='MALE'>Male</option>
             <option value='FEMALE'>Female</option>
           </select>
@@ -189,10 +208,9 @@ const TeacherForm = ({
           <select
             multiple
             className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
-            {...register("subjects")}
-            defaultValue={data?.subjects?.map((sub: any) => sub.id)}>
+            {...register("subjects")}>
             {subjects.map((subject: { id: number; name: string }) => (
-              <option value={subject.id} key={subject.id}>
+              <option value={subject.id.toString()} key={subject.id}>
                 {subject.name}
               </option>
             ))}
