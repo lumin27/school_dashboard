@@ -312,7 +312,6 @@ export default function MessageForm({
                                           )
                                         );
                                       } else {
-                                        // Select all in this group
                                         setSelectedRecipients((prev) => [
                                           ...new Set([
                                             ...prev,

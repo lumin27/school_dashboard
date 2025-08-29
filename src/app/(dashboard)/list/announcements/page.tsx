@@ -23,8 +23,8 @@ const AnnouncementListPage = async ({
       accessor: "title",
     },
     {
-      header: "Class",
-      accessor: "class",
+      header: "Classes",
+      accessor: "classes",
     },
     {
       header: "Date",
@@ -112,7 +112,7 @@ const AnnouncementListPage = async ({
 
   if (role !== "admin") {
     query.OR = [
-      { classes: { none: {} } }, // Announcements with no classes (global)
+      { classes: { none: {} } },
       {
         classes: {
           some: {

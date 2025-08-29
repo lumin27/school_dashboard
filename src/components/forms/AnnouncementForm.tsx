@@ -7,7 +7,6 @@ import {
   announcementSchema,
   AnnouncementSchema,
 } from "@/lib/formValidationSchema";
-import { useFormState } from "react-dom";
 import React, {
   Dispatch,
   SetStateAction,
@@ -34,11 +33,23 @@ const AnnouncementForm = ({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<AnnouncementSchema>({
     resolver: zodResolver(announcementSchema),
   });
 
   const [loading, setLoading] = useState(false);
+  const [selectedClasses, setSelectedClasses] = useState<any[]>([]);
+
+  const resClasses = relatedData?.classes;
+  const allSelected = selectedClasses?.length === resClasses?.length;
+  const handleSelectAll = () => {
+    if (allSelected) {
+      setSelectedClasses([]);
+    } else {
+      setSelectedClasses(resClasses?.map((c: any) => c.id));
+    }
+  };
 
   const [state, formAction] = React.useActionState(
     type === "create" ? createAnnouncement : updateAnnouncement,
@@ -47,6 +58,17 @@ const AnnouncementForm = ({
       error: false,
     }
   );
+
+  useEffect(() => {
+    setValue("classIds", selectedClasses);
+  }, [selectedClasses, setValue]);
+
+  useEffect(() => {
+    if (type === "update") {
+      const ids = data.classes.map((c: any) => c.class.id);
+      setSelectedClasses(ids);
+    }
+  }, [type]);
 
   const onSubmit = handleSubmit((data) => {
     setLoading(true);
@@ -117,6 +139,15 @@ const AnnouncementForm = ({
         <div className='flex flex-col gap-2 w-full md:w-1/2'>
           <label className='text-xs text-gray-500'>Classes</label>
           <div className='max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2'>
+            <button
+              type='button'
+              className='text-xs text-blue-500 hover:text-blue-700 mb-2'
+              onClick={() => {
+                handleSelectAll();
+              }}>
+              <input type='hidden' {...register("classIds")} />
+              {allSelected ? "Deselect All" : "Select All"}
+            </button>
             {classes?.map((classItem: { id: number; name: string }) => (
               <label
                 key={classItem.id}
@@ -124,12 +155,21 @@ const AnnouncementForm = ({
                 <input
                   type='checkbox'
                   value={classItem.id}
-                  {...register("classIds")}
-                  defaultChecked={data?.classes?.some(
-                    (c: any) => c.classId === classItem.id
-                  )}
-                  className='rounded'
+                  checked={selectedClasses.includes(classItem.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedClasses((prev: number[]) => [
+                        ...prev,
+                        classItem.id,
+                      ]);
+                    } else {
+                      setSelectedClasses((prev: number[]) =>
+                        prev.filter((id) => id !== classItem.id)
+                      );
+                    }
+                  }}
                 />
+
                 <span className='text-sm'>{classItem.name}</span>
               </label>
             ))}

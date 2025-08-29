@@ -24,7 +24,6 @@ const Loading = () => {
     const interval = setInterval(fetchLogo, 5000);
     return () => clearInterval(interval);
   }, []);
-  console.log(logo);
   return (
     <div className='w-full h-full flex flex-col items-center justify-center gap-6 bg-gray-50'>
       <div className='absolute inset-0 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-pulse z-0' />

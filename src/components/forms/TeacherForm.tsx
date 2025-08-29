@@ -32,11 +32,13 @@ const TeacherForm = ({
     handleSubmit,
     setValue,
     formState: { errors },
+    watch,
   } = useForm<TeacherSchema>({
     resolver: zodResolver(teacherSchema),
   });
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const watchedSubjects = watch("subjects");
 
   const [state, formAction] = React.useActionState(
     type === "create" ? createTeacher : updateTeacher,
@@ -55,7 +57,6 @@ const TeacherForm = ({
 
   useEffect(() => {
     if (type === "update" && data) {
-      // Set all form values when updating
       if (data.username) setValue("username", data.username);
       if (data.email) setValue("email", data.email);
       if (data.password) setValue("password", data.password);
@@ -103,6 +104,8 @@ const TeacherForm = ({
   }, [state, router, type, setOpen]);
 
   const { subjects } = relatedData;
+
+  console.log("subjects", data.subjects);
 
   return (
     <form className='flex flex-col gap-8' onSubmit={onSubmit}>
@@ -215,7 +218,8 @@ const TeacherForm = ({
           <label className='text-xs text-gray-500'>Subjects</label>
           <select
             multiple
-            className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full'
+            value={watchedSubjects}
+            className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full h-20'
             {...register("subjects")}>
             {subjects.map((subject: { id: number; name: string }) => (
               <option value={subject.id.toString()} key={subject.id}>
@@ -223,6 +227,7 @@ const TeacherForm = ({
               </option>
             ))}
           </select>
+
           {errors.subjects?.message && (
             <p className='text-xs text-red-400'>
               {errors.subjects.message.toString()}

@@ -11,7 +11,6 @@ const toTimeDate = (timeStr: string) => {
   const [hours, minutes] = timeStr.split(":").map(Number);
   const date = new Date(1970, 0, 1);
 
-  // Interpret "00:00" as end of day
   if (hours === 0 && minutes === 0) {
     date.setHours(23, 59, 59);
   } else {
