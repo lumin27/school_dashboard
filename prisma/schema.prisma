@@ -82,9 +82,10 @@ model Grade {
   id    Int @id @default(autoincrement())
   level Int @unique
 
+  classes Class[]
   students Student[]
-  classes  Class[]
 }
+
 
 model Class {
   id       Int    @id @default(autoincrement())
@@ -96,10 +97,10 @@ model Class {
   supervisor    Teacher?       @relation(fields: [supervisorId], references: [id])
   students      Student[]
   gradeId       Int
-  grade         Grade          @relation(fields: [gradeId], references: [id])
   events        Event[]
   announcementClasses AnnouncementClass[]
-}
+  grade         Grade         @relation(fields: [gradeId], references: [id])
+  }
 
 model Subject {
   id       Int       @id @default(autoincrement())

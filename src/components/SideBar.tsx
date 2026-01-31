@@ -96,7 +96,13 @@ const sideBarItems = [
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/subject.png",
+        icon: "/grade.png",
+        label: "Grades",
+        href: "/list/grades",
+        visible: ["admin"],
+      },
+      {
+        icon: "/transaction.png",
         label: "Transactions",
         href: "/list/transactions",
         visible: ["admin", "accountant"],
@@ -136,7 +142,7 @@ const SideBar = ({
 
   const SidebarContent = () => (
     <div className='flex flex-col h-screen'>
-      <div className='p-3 border-b border-gray-200 bg-white'>
+      <div className='p-2.5 border-b border-gray-200 bg-white'>
         <Link href='/' className='flex items-center gap-2'>
           <Image
             src={getValidImageSrc(schoolData?.logo)}

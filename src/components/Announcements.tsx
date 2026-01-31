@@ -11,6 +11,8 @@ const Announcements = async () => {
     parent: { students: { some: { parentId: userId! } } },
   };
 
+  const classes = await prisma.class.findMany();
+
   const data = await prisma.announcement.findMany({
     take: 3,
     orderBy: {
@@ -45,7 +47,7 @@ const Announcements = async () => {
       <div className='flex items-center justify-between'>
         <h1 className='text-xl font-semibold'>Announcements</h1>
         <a
-          className='text-xs text-gray-400 bg-white rounded-md px-1 py-1 hover:underline cursor-pointer'
+          className='text-xs text-gray-400 bg-white rounded-md px-1 py-1 hover:underline cursor-pointer hover:text-blue-600'
           href='/list/announcements'>
           View All
         </a>
@@ -72,9 +74,11 @@ const Announcements = async () => {
               <div className='mt-2'>
                 <span className='text-xs text-gray-500'>Classes: </span>
                 <span className='text-xs text-blue-600'>
-                  {announcement.classes
-                    .map((ac: any) => ac.class.name)
-                    .join(", ")}
+                  {announcement.classes.length === classes.length
+                    ? "All Classes"
+                    : announcement.classes
+                        .map((cls) => cls.class.name)
+                        .join(", ")}
                 </span>
               </div>
             )}

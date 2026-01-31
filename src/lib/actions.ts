@@ -9,6 +9,7 @@ import {
   ClassSchema,
   EventSchema,
   ExamSchema,
+  GradeSchema,
   LessonSchema,
   messageSchema,
   ParentSchema,
@@ -343,11 +344,17 @@ export const updateTeacher = async (
         img: imageUrl || null,
         bloodType: data.bloodType,
         sex: data.sex,
-        subjects: {
-          set: data.subjects?.map((subjectId) => ({
-            id: Number(subjectId),
-          })),
-        },
+        // Only update subjects if provided. This prevents forcing re-selection
+        // when updating unrelated fields like name or phone.
+        ...(Array.isArray(data.subjects) && data.subjects.length > 0
+          ? {
+              subjects: {
+                set: data.subjects.map((subjectId) => ({
+                  id: Number(subjectId),
+                })),
+              },
+            }
+          : {}),
       },
     });
     return { success: true, error: false };
@@ -1511,6 +1518,63 @@ export async function deleteTransaction(
     return { success: false, error: true };
   }
 }
+
+// GRADE DATA
+
+export const createGrade = async (
+  currentState: CurrentState,
+  data: GradeSchema
+) => {
+  try {
+    await prisma.grade.create({
+      data: {
+        level: data.level,
+      },
+    });
+    return { success: true, error: false };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: true };
+  }
+};
+
+export const updateGrade = async (
+  currentState: CurrentState,
+  data: GradeSchema
+) => {
+  try {
+    await prisma.grade.update({
+      where: { id: data.id },
+      data: {
+        level: data.level,
+      },
+    });
+    return { success: true, error: false };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: true };
+  }
+};
+
+export const deleteGrade = async (
+  currentState: CurrentState,
+  data: FormData
+) => {
+  const id = data.get("id") as string;
+
+  try {
+    await prisma.grade.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    revalidatePath("/list/grades");
+    return { success: true, error: false };
+  } catch (error) {
+    console.log(error);
+    return { success: false, error: true };
+  }
+};
 
 //  MESSAGE DATA
 

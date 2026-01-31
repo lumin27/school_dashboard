@@ -31,6 +31,9 @@ const SingleTeacherPage = async ({
           subject: {
             name: string;
           };
+          class: {
+            name: string;
+          };
         }[];
         classes: {
           name: string;
@@ -47,8 +50,14 @@ const SingleTeacherPage = async ({
         },
       },
       subjects: { select: { name: true } },
-      lessons: { select: { name: true, subject: { select: { name: true } } } },
-      classes: true,
+      lessons: {
+        select: {
+          name: true,
+          subject: { select: { name: true } },
+          class: { select: { name: true } },
+        },
+      },
+      classes: { select: { name: true } },
     },
   });
 
@@ -82,9 +91,14 @@ const SingleTeacherPage = async ({
                 )}
               </div>
               <p className='text-sm text-gray-500'>
-                {teacher?.classes.map((cls) => cls.name).join(", ")}
+                {teacher.classes.map((cls) => cls.name).join(", ")}
                 {"-"}
-                {teacher?.subjects.map((subject) => subject.name).join(", ")}
+                {teacher.lessons
+                  .map(
+                    (lesson) =>
+                      lesson.subject.name + "(" + lesson.class.name + ")"
+                  )
+                  .join(", ")}
               </p>
               <div className='flex items-center justify-between gap-2 flex-wrap text-xs font-medium'>
                 <div className='w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2'>

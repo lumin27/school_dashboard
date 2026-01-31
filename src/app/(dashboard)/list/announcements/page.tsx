@@ -25,6 +25,7 @@ const AnnouncementListPage = async ({
     {
       header: "Classes",
       accessor: "classes",
+      className: "hidden md:table-cell",
     },
     {
       header: "Date",
@@ -46,7 +47,7 @@ const AnnouncementListPage = async ({
       key={item.id}
       className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lmPurpleLight'>
       <td className='flex items-center gap-4 p-4 pl-2'>{item.title}</td>
-      <td>
+      <td className='hidden md:table-cell'>
         {item.classes.length > 0
           ? item.classes.map((ac: any) => ac.class.name).join(", ")
           : "-"}

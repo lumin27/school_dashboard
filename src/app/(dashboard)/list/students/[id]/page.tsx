@@ -120,7 +120,14 @@ const SingleStudentPage = async ({ params }: PageProps) => {
               />
               <div className=''>
                 <h1 className='text-xl font-semibold'>
-                  {student.gradeId || "-"}th
+                  {student.gradeId || "-"}
+                  {student.gradeId === 1
+                    ? "st"
+                    : student.gradeId === 2
+                    ? "nd"
+                    : student.gradeId === 3
+                    ? "rd"
+                    : "th"}
                 </h1>
                 <span className='text-sm text-gray-400'>Grade</span>
               </div>

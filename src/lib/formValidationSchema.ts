@@ -187,6 +187,13 @@ export const announcementSchema = z.object({
 
 export type AnnouncementSchema = z.infer<typeof announcementSchema>;
 
+export const gradeSchema = z.object({
+  id: z.coerce.number().optional(),
+  level: z.coerce.number().min(1, { message: "Level is required!" }),
+});
+
+export type GradeSchema = z.infer<typeof gradeSchema>;
+
 export const transactionSchema = z.object({
   id: z.string().optional(),
   type: z.enum(["income", "expense"]),

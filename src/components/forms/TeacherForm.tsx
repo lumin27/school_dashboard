@@ -218,7 +218,6 @@ const TeacherForm = ({
           <label className='text-xs text-gray-500'>Subjects</label>
           <select
             multiple
-            value={watchedSubjects}
             className='ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full h-20'
             {...register("subjects")}>
             {subjects.map((subject: { id: number; name: string }) => (
@@ -235,7 +234,6 @@ const TeacherForm = ({
           )}
         </div>
         <input type='hidden' {...register("img")} />
-
         <div className='flex flex-col gap-2 w-full md:w-1/4'>
           <label className='text-xs text-gray-500'>Profile Image</label>
           <input
