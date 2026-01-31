@@ -10,9 +10,11 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.60.0",
     "@clerk/elements": "^0.23.18",
     "@clerk/express": "^1.7.0",
-    "@clerk/nextjs": "^6.22.0",
+    "@clerk/nextjs": "^6.37.1",
+    "@clerk/shared": "^3.44.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.11.1",
     "@types/formidable": "^3.4.5",
@@ -55,8 +57,5 @@
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
-  },
-  "overrides": {
-    "@clerk/shared": "3.9.6"
   }
 }
